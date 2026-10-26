@@ -1,0 +1,80 @@
+version: '3.8'
+
+# ===================================================================
+# Docker Compose Orchestration File
+# Project: SP23-BSE-131-Mid
+# Course: DevOps for Cloud Computing (CSC418) - COMSATS Lahore
+# Services: Multi-container Web App + PostgreSQL Database with Persistent Volumes
+# ===================================================================
+
+services:
+  # -------------------------------------------------------------
+  # Web Application Service (Flask + Gunicorn)
+  # -------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sp23_bse_131_webapp
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=sp23-bse-131-mid-exam-secret-key-super-secure
+      - PORT=5000
+      - DB_USER=sp23_admin
+      - DB_PASSWORD=sp23_secure_pass_131
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=sp23_bse_131_db
+      - DATABASE_URL=postgresql://sp23_admin:sp23_secure_pass_131@db:5432/sp23_bse_131_db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # -------------------------------------------------------------
+  # Database Service (PostgreSQL 15 Alpine)
+  # -------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: sp23_bse_131_database
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=sp23_admin
+      - POSTGRES_PASSWORD=sp23_secure_pass_131
+      - POSTGRES_DB=sp23_bse_131_db
+    volumes:
+      # Named persistent volume to satisfy Task 4: Data persistence across container recreation
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sp23_admin -d sp23_bse_131_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# ---------------------------------------------------------------
+# Named Volume for Data Persistence (Task 4)
+# ---------------------------------------------------------------
+volumes:
+  db_data:
+    name: sp23_bse_131_db_data
+
+# ---------------------------------------------------------------
+# Custom Bridge Network for Inter-container Communication (Task 5)
+# ---------------------------------------------------------------
+networks:
+  app_network:
+    name: sp23_bse_131_network
+    driver: bridge

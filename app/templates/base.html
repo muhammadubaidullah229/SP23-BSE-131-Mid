@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}EduCore | Student Management System{% endblock %}</title>
+  
+  <!-- Modern Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Base Global Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  
+  <!-- Module-Specific Stylesheet -->
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Main Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('main.home') }}" class="brand-logo" id="brand-logo">
+        <svg class="brand-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-title">EduCore</span>
+          <span class="brand-sub">Student Portal</span>
+        </div>
+        <span class="brand-badge">SP23-BSE-131</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="{{ url_for('main.home') }}" class="nav-link">Home</a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link" id="nav-dashboard">Dashboard</a>
+          <a href="{{ url_for('students.index') }}" class="nav-link" id="nav-students">Student Directory</a>
+          <a href="{{ url_for('courses.index') }}" class="nav-link" id="nav-courses">Course Catalog</a>
+        {% endif %}
+      </div>
+
+      <div class="nav-user">
+        {% if current_user.is_authenticated %}
+          <div class="user-tag">
+            <span class="user-avatar-circle">{{ current_user.full_name[:1].upper() }}</span>
+            <div class="user-info-text">
+              <span class="user-name" id="nav-username">{{ current_user.full_name }}</span>
+              <span class="user-role">{{ current_user.role }}</span>
+            </div>
+          </div>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm" id="btn-logout">Sign Out</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-sm" id="nav-login">Sign In</a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm" id="nav-register">Enroll / Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Notification Banners -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <span>{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Page Content Block -->
+  <main class="main-wrapper">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Professional Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <strong>EduCore Student Information System</strong>
+        <p>Enterprise Academic & Student Lifecycle Management Platform</p>
+      </div>
+      <div class="footer-meta">
+        <span class="footer-pill">Student Reg: SP23-BSE-131</span>
+        <span class="footer-pill">Department of Software Engineering</span>
+        <span class="footer-pill">Cloud-Native Microservices</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Base JS Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <!-- Modular Page Specific JS -->
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

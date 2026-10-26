@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}EduCore | Campus Student Information System{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    <span>Unified Campus Academic Platform &bull; Portal v2.4</span>
+  </div>
+  
+  <h1 class="hero-title">
+    Modern Academic Excellence &amp; <br>
+    <span class="hero-highlight">Student Lifecycle Management</span>
+  </h1>
+  
+  <p class="hero-subtitle">
+    EduCore streamlines student admissions, course registrations, academic records, and department grade tracking through a centralized, high-performance web platform.
+  </p>
+
+  <div class="hero-cta-group">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary" id="hero-dashboard-btn">
+        <span>Go to Academic Dashboard</span> &rarr;
+      </a>
+      <a href="{{ url_for('students.index') }}" class="btn btn-outline" id="hero-students-btn">
+        <span>Browse Student Directory</span>
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary" id="hero-login-btn">
+        <span>Access Student Portal</span> &rarr;
+      </a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-outline" id="hero-register-btn">
+        <span>Student &amp; Faculty Registration</span>
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Quick Stats Counter -->
+<section class="stats-counter-strip">
+  <div class="counter-item">
+    <span class="counter-num">{{ total_students }}+</span>
+    <span class="counter-desc">Enrolled Students</span>
+  </div>
+  <div class="counter-divider"></div>
+  <div class="counter-item">
+    <span class="counter-num">{{ total_courses }}</span>
+    <span class="counter-desc">Department Courses</span>
+  </div>
+  <div class="counter-divider"></div>
+  <div class="counter-item">
+    <span class="counter-num">100%</span>
+    <span class="counter-desc">Digital Transcripts</span>
+  </div>
+  <div class="counter-divider"></div>
+  <div class="counter-item">
+    <span class="counter-num">99.9%</span>
+    <span class="counter-desc">Cloud Uptime</span>
+  </div>
+</section>
+
+<!-- Portal Modules Grid -->
+<section class="modules-grid-section">
+  <div class="section-heading">
+    <h2>Integrated Campus Modules</h2>
+    <p>Everything students, faculty, and academic advisors need in one secure portal</p>
+  </div>
+
+  <div class="modules-grid">
+    <!-- Module 1 -->
+    <div class="module-card">
+      <div class="module-icon blue">🎓</div>
+      <h3>Student Records &amp; Profiles</h3>
+      <p>Comprehensive student profiles tracking registration numbers, semester status, contact emails, and departmental affiliations.</p>
+      <div class="module-footer">
+        <a href="{{ url_for('students.index') }}" class="module-link">View Directory &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div class="module-card">
+      <div class="module-icon purple">📚</div>
+      <h3>Course Catalog &amp; Enrollment</h3>
+      <p>Search and inspect university courses with designated credit hours, faculty instructors, and department curricula.</p>
+      <div class="module-footer">
+        <a href="{{ url_for('courses.index') }}" class="module-link">Browse Courses &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div class="module-card">
+      <div class="module-icon green">📊</div>
+      <h3>Academic Analytics &amp; CGPA</h3>
+      <p>Instant visual dashboards with class GPAs, department distribution statistics, and honor roll recognition.</p>
+      <div class="module-footer">
+        <a href="{{ url_for('main.dashboard') }}" class="module-link">Open Analytics &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div class="module-card">
+      <div class="module-icon amber">🛡️</div>
+      <h3>Cloud Security &amp; Persistence</h3>
+      <p>Hardened data layer with encrypted password verification, role permissions, and transactional database persistence.</p>
+      <div class="module-footer">
+        <span class="status-chip">Enterprise Ready</span>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,61 @@
+[2026-10-26 14:16:12] [INFO] ======================================================================
+[2026-10-26 14:16:12] [INFO]    SELENIUM AUTOMATED TEST SUITE EXECUTION START
+[2026-10-26 14:16:12] [INFO]    Target URL : http://localhost:5000
+[2026-10-26 14:16:12] [INFO]    Log File   : F:\SP23-BSE-131-Mid\tests\test_results.log
+[2026-10-26 14:16:12] [INFO]    Started At : 2026-10-26 14:16:12
+[2026-10-26 14:16:12] [INFO] ======================================================================
+[2026-10-26 14:16:12] [INFO] 
+--- Running TC-01: Portal Home Page & Brand Navigation Verification ---
+[2026-10-26 14:16:14] [INFO]   [PASS] TC-01: Portal Home Page & Brand Navigation Verification
+[2026-10-26 14:16:14] [INFO] 
+--- Running TC-02: Student User Registration Workflow (Happy Path) ---
+[2026-10-26 14:16:16] [INFO]   [PASS] TC-02: Student User Registration Workflow (Happy Path)
+[2026-10-26 14:16:16] [INFO] 
+--- Running TC-03: Duplicate Registration Prevention Validation ---
+[2026-10-26 14:16:17] [INFO]   [PASS] TC-03: Duplicate Registration Prevention Validation
+[2026-10-26 14:16:17] [INFO] 
+--- Running TC-04: Registration Password Confirmation Mismatch Validation ---
+[2026-10-26 14:16:18] [INFO]   [PASS] TC-04: Registration Password Confirmation Mismatch Validation
+[2026-10-26 14:16:18] [INFO] 
+--- Running TC-05: Authentication Security - Invalid Credentials Rejection ---
+[2026-10-26 14:16:19] [INFO]   [PASS] TC-05: Authentication Security - Invalid Credentials Rejection
+[2026-10-26 14:16:19] [INFO] 
+--- Running TC-06: Valid User Authentication & Protected Dashboard Access ---
+[2026-10-26 14:16:20] [INFO]   [PASS] TC-06: Valid User Authentication & Protected Dashboard Access
+[2026-10-26 14:16:20] [INFO] 
+--- Running TC-07: Academic Dashboard KPIs & Honor Roll Verification ---
+[2026-10-26 14:16:20] [INFO]   [PASS] TC-07: Academic Dashboard KPIs & Honor Roll Verification
+[2026-10-26 14:16:20] [INFO] 
+--- Running TC-08: Student Directory - Modal Enrollment & DOM Injection ---
+[2026-10-26 14:16:22] [INFO]   [PASS] TC-08: Student Directory - Modal Enrollment & DOM Injection
+[2026-10-26 14:16:22] [INFO] 
+--- Running TC-09: Student Directory Real-Time Instant Search & Filter ---
+[2026-10-26 14:16:23] [INFO]   [PASS] TC-09: Student Directory Real-Time Instant Search & Filter
+[2026-10-26 14:16:23] [INFO] 
+--- Running TC-10: Course Catalog Inspection & AWS ALB Health Endpoint ---
+[2026-10-26 14:16:24] [INFO]   [PASS] TC-10: Course Catalog Inspection & AWS ALB Health Endpoint
+[2026-10-26 14:16:24] [INFO] 
+======================================================================
+                   TEST EXECUTION SUMMARY REPORT
+======================================================================
+Test ID  | Status | Test Case Description                             
+----------------------------------------------------------------------
+TC-01    | [PASS] | Portal Home Page & Brand Navigation Verification  
+TC-02    | [PASS] | Student User Registration Workflow (Happy Path)   
+TC-03    | [PASS] | Duplicate Registration Prevention Validation      
+TC-04    | [PASS] | Registration Password Confirmation Mismatch Valida
+TC-05    | [PASS] | Authentication Security - Invalid Credentials Reje
+TC-06    | [PASS] | Valid User Authentication & Protected Dashboard Ac
+TC-07    | [PASS] | Academic Dashboard KPIs & Honor Roll Verification 
+TC-08    | [PASS] | Student Directory - Modal Enrollment & DOM Injecti
+TC-09    | [PASS] | Student Directory Real-Time Instant Search & Filte
+TC-10    | [PASS] | Course Catalog Inspection & AWS ALB Health Endpoin
+----------------------------------------------------------------------
+Total Test Cases : 10
+Passed           : 10
+Failed           : 0
+Success Rate     : 100.0%
+Total Duration   : 11.48 seconds
+Log Output File  : F:\SP23-BSE-131-Mid\tests\test_results.log
+======================================================================
+

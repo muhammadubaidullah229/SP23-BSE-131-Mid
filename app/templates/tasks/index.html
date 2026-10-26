@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Task Board | DevPulse - SP23-BSE-131{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tasks.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Top Action Toolbar -->
+<div class="tasks-toolbar">
+  <div class="search-filter-box">
+    <input 
+      type="text" 
+      id="taskSearchInput" 
+      class="search-input" 
+      placeholder="🔍 Search tasks by title or keyword..."
+    >
+  </div>
+
+  <button class="btn btn-primary" id="openTaskModalBtn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    Create New Task
+  </button>
+</div>
+
+<!-- Kanban Columns Grid -->
+<div class="kanban-board">
+  
+  <!-- Column 1: Pending -->
+  <div class="kanban-column" id="col-pending">
+    <div class="column-header">
+      <div class="column-title-group">
+        <span class="column-pill pending"></span>
+        <span>Pending</span>
+      </div>
+      <span class="column-count" id="count-pending">{{ pending_tasks|length }}</span>
+    </div>
+
+    <div class="tasks-container" id="container-pending">
+      {% for task in pending_tasks %}
+        <div class="task-card" data-id="{{ task.id }}">
+          <div class="task-card-header">
+            <h4 class="task-title">{{ task.title }}</h4>
+            <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+          </div>
+
+          {% if task.description %}
+            <p class="task-desc">{{ task.description }}</p>
+          {% endif %}
+
+          <div class="task-meta">
+            <span>📅 {{ task.due_date or 'No date' }}</span>
+            <span>Created: {{ task.created_at.strftime('%b %d') }}</span>
+          </div>
+
+          <div class="task-actions">
+            <!-- Progress button -->
+            <button class="btn btn-outline btn-sm" onclick="updateTaskStatusAjax({{ task.id }}, 'In Progress')">
+              Move to In Progress &rarr;
+            </button>
+            <!-- Delete form -->
+            <form action="{{ url_for('tasks.delete_task', task_id=task.id) }}" method="POST" style="margin-left: auto;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this task?');" title="Delete Task">🗑️</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p style="text-align: center; color: var(--text-light); font-size: 0.85rem; padding: 2rem 0;">No pending tasks</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Column 2: In Progress -->
+  <div class="kanban-column" id="col-in-progress">
+    <div class="column-header">
+      <div class="column-title-group">
+        <span class="column-pill in-progress"></span>
+        <span>In Progress</span>
+      </div>
+      <span class="column-count" id="count-in-progress">{{ in_progress_tasks|length }}</span>
+    </div>
+
+    <div class="tasks-container" id="container-in-progress">
+      {% for task in in_progress_tasks %}
+        <div class="task-card" data-id="{{ task.id }}">
+          <div class="task-card-header">
+            <h4 class="task-title">{{ task.title }}</h4>
+            <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+          </div>
+
+          {% if task.description %}
+            <p class="task-desc">{{ task.description }}</p>
+          {% endif %}
+
+          <div class="task-meta">
+            <span>📅 {{ task.due_date or 'No date' }}</span>
+            <span>Created: {{ task.created_at.strftime('%b %d') }}</span>
+          </div>
+
+          <div class="task-actions">
+            <button class="btn btn-outline btn-sm" onclick="updateTaskStatusAjax({{ task.id }}, 'Pending')">
+              &larr; Pending
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="updateTaskStatusAjax({{ task.id }}, 'Completed')">
+              Complete &check;
+            </button>
+            <form action="{{ url_for('tasks.delete_task', task_id=task.id) }}" method="POST" style="margin-left: auto;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this task?');" title="Delete Task">🗑️</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p style="text-align: center; color: var(--text-light); font-size: 0.85rem; padding: 2rem 0;">No tasks in progress</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Column 3: Completed -->
+  <div class="kanban-column" id="col-completed">
+    <div class="column-header">
+      <div class="column-title-group">
+        <span class="column-pill completed"></span>
+        <span>Completed</span>
+      </div>
+      <span class="column-count" id="count-completed">{{ completed_tasks|length }}</span>
+    </div>
+
+    <div class="tasks-container" id="container-completed">
+      {% for task in completed_tasks %}
+        <div class="task-card" data-id="{{ task.id }}">
+          <div class="task-card-header">
+            <h4 class="task-title" style="text-decoration: line-through; opacity: 0.8;">{{ task.title }}</h4>
+            <span class="priority-badge priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+          </div>
+
+          {% if task.description %}
+            <p class="task-desc">{{ task.description }}</p>
+          {% endif %}
+
+          <div class="task-meta">
+            <span>📅 Completed</span>
+            <span>Created: {{ task.created_at.strftime('%b %d') }}</span>
+          </div>
+
+          <div class="task-actions">
+            <button class="btn btn-outline btn-sm" onclick="updateTaskStatusAjax({{ task.id }}, 'In Progress')">
+              &larr; Reopen
+            </button>
+            <form action="{{ url_for('tasks.delete_task', task_id=task.id) }}" method="POST" style="margin-left: auto;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this task?');" title="Delete Task">🗑️</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p style="text-align: center; color: var(--text-light); font-size: 0.85rem; padding: 2rem 0;">No completed tasks</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<!-- Interactive Modal for Creating a New Task -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Create New Task</h2>
+      <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+    </div>
+
+    <form action="{{ url_for('tasks.create_task') }}" method="POST" id="createTaskForm">
+      <div class="form-group" style="margin-bottom: 1.15rem;">
+        <label for="taskTitleInput" class="form-label">Task Title *</label>
+        <input 
+          type="text" 
+          id="taskTitleInput" 
+          name="title" 
+          class="form-input" 
+          placeholder="e.g. Configure AWS Application Load Balancer" 
+          required
+        >
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.15rem;">
+        <label for="taskDescInput" class="form-label">Description</label>
+        <textarea 
+          id="taskDescInput" 
+          name="description" 
+          class="form-input" 
+          rows="3" 
+          placeholder="Detailed notes or requirements for this task..."
+        ></textarea>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="form-group">
+          <label for="taskPrioritySelect" class="form-label">Priority</label>
+          <select id="taskPrioritySelect" name="priority" class="form-input">
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="taskDueDateInput" class="form-label">Due Date</label>
+          <input type="date" id="taskDueDateInput" name="due_date" class="form-input">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn btn-outline" id="cancelModalBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="createTaskSubmitBtn">Save Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
+{% endblock %}

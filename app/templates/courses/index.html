@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Course Catalog | EduCore Portal{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/courses.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="courses-header">
+  <div>
+    <h1>University Course Catalog</h1>
+    <p>Academic offerings and departmental credit requirements</p>
+  </div>
+  <button class="btn btn-primary" onclick="document.getElementById('addCourseModal').classList.add('active');">
+    + Add New Course
+  </button>
+</div>
+
+<div class="courses-grid">
+  {% for course in courses %}
+    <div class="course-card">
+      <div class="course-card-top">
+        <span class="course-code-badge">{{ course.code }}</span>
+        <span class="credit-badge">{{ course.credit_hours }} Credit Hours</span>
+      </div>
+
+      <h3 class="course-title">{{ course.title }}</h3>
+      <p class="course-instructor">👨‍🏫 Instructor: <strong>{{ course.instructor }}</strong></p>
+
+      <div class="course-card-bottom">
+        <span class="dept-tag">{{ course.department }}</span>
+        <span class="enrollment-status">Open for Registration</span>
+      </div>
+    </div>
+  {% else %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-card); border-radius: var(--radius-lg);">
+      <p>No courses listed currently.</p>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Modal for Adding Course -->
+<div class="modal-overlay" id="addCourseModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Add Course Offering</h2>
+      <button class="modal-close-btn" onclick="document.getElementById('addCourseModal').classList.remove('active');">&times;</button>
+    </div>
+
+    <form action="{{ url_for('courses.add_course') }}" method="POST">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label class="form-label">Course Code *</label>
+          <input type="text" name="code" class="form-input" placeholder="e.g. CSC418" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Credit Hours</label>
+          <input type="number" name="credit_hours" class="form-input" value="3" min="1" max="5" required>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label">Course Title *</label>
+        <input type="text" name="title" class="form-input" placeholder="e.g. DevOps for Cloud Computing" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label">Faculty Instructor *</label>
+        <input type="text" name="instructor" class="form-input" placeholder="e.g. Dr. M. Hasanain Ch" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label">Department *</label>
+        <select name="department" class="form-input">
+          <option value="Software Engineering" selected>Software Engineering</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Artificial Intelligence">Artificial Intelligence</option>
+          <option value="Cyber Security">Cyber Security</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('addCourseModal').classList.remove('active');">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Course</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
