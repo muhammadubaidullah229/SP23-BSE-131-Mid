@@ -28,7 +28,7 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_NAME=sp23_bse_131_db
-      - DATABASE_URL=postgresql://sp23_admin:sp23_secure_pass_131@db:5432/sp23_bse_131_db
+      - DATABASE_URL=postgresql+psycopg2://sp23_admin:sp23_secure_pass_131@db:5432/sp23_bse_131_db
     depends_on:
       db:
         condition: service_healthy

@@ -13,9 +13,14 @@ class Config:
     DB_NAME = os.environ.get('DB_NAME')
 
     if os.environ.get('DATABASE_URL'):
-        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+        url = os.environ.get('DATABASE_URL')
+        if url.startswith('postgresql://'):
+            url = url.replace('postgresql://', 'postgresql+psycopg2://', 1)
+        elif url.startswith('postgres://'):
+            url = url.replace('postgres://', 'postgresql+psycopg2://', 1)
+        SQLALCHEMY_DATABASE_URI = url
     elif DB_USER and DB_PASSWORD and DB_NAME:
-        SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     else:
         # Fallback for local quick testing outside Docker
         base_dir = os.path.abspath(os.path.dirname(__file__))

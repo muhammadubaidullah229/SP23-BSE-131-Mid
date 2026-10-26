@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy import text
 from app.models import db, Student, Course, User
 
 main_bp = Blueprint('main', __name__)
@@ -16,7 +17,7 @@ def health_check():
     """Health check endpoint required by AWS Application Load Balancer Target Group"""
     db_status = "healthy"
     try:
-        db.session.execute(db.text('SELECT 1'))
+        db.session.execute(text('SELECT 1'))
     except Exception as e:
         db_status = f"unhealthy: {str(e)}"
 
